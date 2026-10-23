@@ -13,7 +13,7 @@ create table if not exists public.profiles (
 create table if not exists public.entries (
   id          uuid primary key default gen_random_uuid(),
   user_id     uuid not null references public.profiles(id) on delete cascade,
-  source      text not null default 'tmdb' check (source in ('tmdb', 'demo')),
+  source      text not null default 'tmdb' check (source in ('tmdb', 'demo', 'custom')),
   external_id bigint not null,
   media_type  text not null check (media_type in ('movie', 'tv')),
   title       text not null check (char_length(title) between 1 and 300),

@@ -1,5 +1,5 @@
 export type MediaType = "movie" | "tv";
-export type Source = "tmdb" | "demo";
+export type Source = "tmdb" | "demo" | "custom"; // custom = typed in by the person because search could not find it
 export type Status = "watched" | "want";
 
 export type Entry = {

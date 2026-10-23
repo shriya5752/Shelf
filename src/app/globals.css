@@ -464,3 +464,6 @@ h4.sh { font: 500 10px var(--mono); letter-spacing: 0.25em; text-transform: uppe
 .sitefoot a:hover { color: var(--accent); }
 .doc .sitefoot { padding-top: 0; }
 .sitefoot b { color: var(--ink); font-weight: 500; }
+
+.hint.cant { margin-top: 18px; }
+.linkbtn { background: none; border: 0; padding: 0; font: inherit; color: var(--accent); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }

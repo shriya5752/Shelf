@@ -2,7 +2,7 @@ import type { Draft, Entry } from "./types";
 import { supabase } from "./supabase";
 
 type Row = {
-  id: string; source: "tmdb" | "demo"; external_id: number; media_type: "movie" | "tv"; title: string;
+  id: string; source: "tmdb" | "demo" | "custom"; external_id: number; media_type: "movie" | "tv"; title: string;
   year: number | null; creator: string | null; genres: string[] | null; poster_url: string | null;
   color: string; ink: string; seasons: number | null; status: "watched" | "want" | null; rating: number | null; watched_on: string | null;
   liked: string | null; learned: string | null; created_at: string;

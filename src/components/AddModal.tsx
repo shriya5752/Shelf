@@ -45,7 +45,7 @@ function Stars({ value, onChange }: { value: number; onChange: (n: number) => vo
 }
 
 export default function AddModal({ editing, initialQuery, initialStatus, existing, onClose, onSave }: Props) {
-  const [step, setStep] = useState<"search" | "details">(editing ? "details" : "search");
+  const [step, setStep] = useState<"search" | "custom" | "details">(editing ? "details" : "search");
   const [dir, setDir] = useState(1);
   const [query, setQuery] = useState(initialQuery ?? "");
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -59,6 +59,10 @@ export default function AddModal({ editing, initialQuery, initialStatus, existin
   const [watchedOn, setWatchedOn] = useState(editing?.watchedOn || (editing && editing.status === "want" && initialStatus === "watched" ? new Date().toISOString().slice(0, 10) : ""));
   const [liked, setLiked] = useState(editing?.liked ?? "");
   const [learned, setLearned] = useState(editing?.learned ?? "");
+  const [cTitle, setCTitle] = useState("");
+  const [cType, setCType] = useState<"movie" | "tv">("movie");
+  const [cYear, setCYear] = useState("");
+  const [cCreator, setCCreator] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -131,6 +135,18 @@ export default function AddModal({ editing, initialQuery, initialStatus, existin
     }
   }
 
+  /** search couldn't find it: add it by hand (no poster; the spine gets its own colour) */
+  function chooseCustom() {
+    const y = /^\d{4}$/.test(cYear.trim()) ? Number(cYear.trim()) : null;
+    const t = cTitle.trim();
+    const r: SearchResult = { source: "custom", externalId: Date.now() * 1000 + Math.floor(Math.random() * 1000), mediaType: cType, title: t, year: y, thumb: null, poster: null };
+    setPicked(r);
+    setDetails({ creator: cCreator.trim(), genres: [], seasons: null, year: y, poster: null });
+    setDetailsError(false);
+    setDir(1);
+    setStep("details");
+  }
+
   const title = editing?.title ?? picked?.title ?? "";
   const thumb = editing?.posterUrl ?? picked?.thumb ?? null;
 
@@ -182,7 +198,7 @@ export default function AddModal({ editing, initialQuery, initialStatus, existin
         transition={{ type: "spring", stiffness: 300, damping: 28 }}
       >
         <div className="sheet-head">
-          <h2>{editing ? (initialStatus === "watched" && editing.status === "want" ? "You watched it!" : "Edit") : step === "search" ? (status === "want" ? "Add to want to watch" : "Add to your shelf") : "Your notes"}</h2>
+          <h2>{editing ? (initialStatus === "watched" && editing.status === "want" ? "You watched it!" : "Edit") : step === "search" ? (status === "want" ? "Add to want to watch" : "Add to your shelf") : step === "custom" ? "Add it yourself" : "Your notes"}</h2>
           <button className="x" onClick={onClose} aria-label="Close">✕</button>
         </div>
 
@@ -237,6 +253,42 @@ export default function AddModal({ editing, initialQuery, initialStatus, existin
                     })}
                   </AnimatePresence>
                 </ul>
+                {query.trim().length >= 2 && !loading && (
+                  <p className="hint cant">
+                    Didn’t find what you’re looking for?{" "}
+                    <button type="button" className="linkbtn" onClick={() => { setCTitle((t) => t || query.trim()); setDir(1); setStep("custom"); }}>
+                      Don’t worry, add it here
+                    </button>
+                  </p>
+                )}
+              </motion.div>
+            ) : step === "custom" ? (
+              <motion.div key="custom" custom={dir} variants={slide} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.22 }}>
+                <p className="hint" style={{ marginTop: 0 }}>No problem. Tell me about it and it goes on your shelf with its own spine (there’s no poster for titles added by hand).</p>
+                <div className="seg" role="tablist" aria-label="Movie or series">
+                  {(["movie", "tv"] as const).map((t) => (
+                    <button key={t} type="button" role="tab" aria-selected={cType === t} className={`segbtn${cType === t ? " on" : ""}`} onClick={() => setCType(t)}>
+                      {cType === t && <motion.span layoutId="ctpill" className="bg" transition={{ type: "spring", stiffness: 420, damping: 34 }} />}
+                      <span>{t === "movie" ? "Movie" : "Series"}</span>
+                    </button>
+                  ))}
+                </div>
+                <label className="field">
+                  <span>Title</span>
+                  <input value={cTitle} maxLength={300} onChange={(e) => setCTitle(e.target.value)} placeholder="Exactly as you’d like it on the spine" autoFocus />
+                </label>
+                <label className="field">
+                  <span>Year (optional)</span>
+                  <input inputMode="numeric" maxLength={4} value={cYear} onChange={(e) => setCYear(e.target.value.replace(/\D/g, ""))} placeholder="2019" />
+                </label>
+                <label className="field">
+                  <span>{cType === "tv" ? "Creator" : "Director"} (optional)</span>
+                  <input value={cCreator} maxLength={300} onChange={(e) => setCCreator(e.target.value)} />
+                </label>
+                <div className="foot">
+                  <button className="btn ghost small" onClick={() => { setDir(-1); setStep("search"); }}>← Back to search</button>
+                  <button className="btn" disabled={!cTitle.trim()} onClick={chooseCustom}>Continue</button>
+                </div>
               </motion.div>
             ) : (
               <motion.div key="details" custom={dir} variants={slide} initial="initial" animate="animate" exit="exit" transition={{ duration: 0.22 }}>
@@ -292,7 +344,7 @@ export default function AddModal({ editing, initialQuery, initialStatus, existin
                 {saveError && <p className="hint err">{saveError}</p>}
                 <div className="foot">
                   {editing ? <span /> : (
-                    <button className="btn ghost small" onClick={() => { setDir(-1); setStep("search"); }}>← Back</button>
+                    <button className="btn ghost small" onClick={() => { setDir(-1); setStep(picked?.source === "custom" ? "custom" : "search"); }}>← Back</button>
                   )}
                   <button className="btn" disabled={saving || (!editing && !details)} onClick={save}>
                     {saving ? "Saving…" : editing ? "Save" : status === "want" ? "Add to my list" : "Add to shelf"}
