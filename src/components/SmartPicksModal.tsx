@@ -11,7 +11,8 @@ type Props = {
   entries: Entry[];
   existing: Set<string>;
   onClose: () => void;
-  onConfirm: (picks: SearchResult[], status: Status) => void;
+  /** leave out for visitors: they can look at the picks but not add them */
+  onConfirm?: (picks: SearchResult[], status: Status) => void;
 };
 type Meta = { matched: number; likedCount: number; total: number; latestYear: number };
 
@@ -69,6 +70,7 @@ export default function SmartPicksModal({ entries, existing, onClose, onConfirm 
   const toggle = (r: SearchResult) =>
     setPicked((p) => {
       const k = entryKey(r);
+      if (!onConfirm) return p;
       if (p[k]) {
         const { [k]: _gone, ...rest } = p;
         void _gone;
@@ -101,6 +103,7 @@ export default function SmartPicksModal({ entries, existing, onClose, onConfirm 
             It only knows <b>movies up to 2018</b> (no series, nothing newer) and works best once you have 10+ movies on your shelf.{" "}
             <Link href="/model">How I trained it →</Link>
           </p>
+          {!onConfirm && <p className="sp-note" style={{ marginTop: -6 }}>Try it: these picks come from the movies on <b>this shelf</b>. Make your own shelf and it will work from yours.</p>}
 
           <div className="sp-slider">
             <span>Play it safe</span>
@@ -117,7 +120,7 @@ export default function SmartPicksModal({ entries, existing, onClose, onConfirm 
             <datalist id="sp-steps">{STEPS.map((s) => <option key={s} value={s} />)}</datalist>
             <span>Surprise me</span>
           </div>
-          {meta && !few && <p className="note" style={{ marginTop: 6 }}>Based on {meta.matched} of your {meta.likedCount} liked movies that the model knows.</p>}
+          {meta && !few && <p className="note" style={{ marginTop: 6 }}>Based on {meta.matched} of {onConfirm ? "your" : "this shelf's"} {meta.likedCount} liked movies that the model knows.</p>}
 
           {loading && (
             <div className="picks">{Array.from({ length: 9 }).map((_, i) => <div key={i} className="pick skeleton" />)}</div>
@@ -176,10 +179,10 @@ export default function SmartPicksModal({ entries, existing, onClose, onConfirm 
                   <>
                     <b>{focus.title}</b>
                     {focus.year ? ` (${focus.year})` : ""}
-                    {focus.because?.length ? <> · because you liked {focus.because.join(" + ")}</> : null}
+                    {focus.because?.length ? <> · because {onConfirm ? "you" : "this shelf"} liked {focus.because.join(" + ")}</> : null}
                   </>
                 ) : (
-                  "Tap a poster to select it. This line tells you why it was suggested. The % is a relative match, not a chance of liking it."
+                  (onConfirm ? "Tap a poster to select it. " : "Hover or tap a poster. ") + "This line tells you why it was suggested. The % is a relative match, not a chance of liking it."
                 )}
               </p>
             </>
@@ -187,14 +190,14 @@ export default function SmartPicksModal({ entries, existing, onClose, onConfirm 
 
           <div className="foot sticky">
             <button className="btn ghost small" onClick={onClose}>Close</button>
-            <div className="row" style={{ justifyContent: "flex-end" }}>
-              <motion.button className="btn" disabled={!count} whileTap={{ scale: 0.96 }} onClick={() => onConfirm(Object.values(picked), "want")}>
+            {onConfirm && <div className="row" style={{ justifyContent: "flex-end" }}>
+              <motion.button className="btn" disabled={!count} whileTap={{ scale: 0.96 }} onClick={() => onConfirm?.(Object.values(picked), "want")}>
                 {count ? `Add ${count} to want to watch` : "Pick a few"}
               </motion.button>
-              <motion.button className="btn ghost" disabled={!count} whileTap={{ scale: 0.96 }} onClick={() => onConfirm(Object.values(picked), "watched")}>
+              <motion.button className="btn ghost" disabled={!count} whileTap={{ scale: 0.96 }} onClick={() => onConfirm?.(Object.values(picked), "watched")}>
                 {count ? `I’ve watched ${count}` : "Already seen"}
               </motion.button>
-            </div>
+            </div>}
           </div>
         </div>
       </motion.div>

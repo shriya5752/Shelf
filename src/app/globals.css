@@ -463,3 +463,4 @@ h4.sh { font: 500 10px var(--mono); letter-spacing: 0.25em; text-transform: uppe
 .sitefoot a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
 .sitefoot a:hover { color: var(--accent); }
 .doc .sitefoot { padding-top: 0; }
+.sitefoot b { color: var(--ink); font-weight: 500; }

@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   ...(site ? { metadataBase: new URL(site) } : {}),
   title,
   description,
+  authors: [{ name: "Shriya" }],
   openGraph: { title, description, siteName: "Shelf", type: "website" },
   twitter: { card: "summary_large_image", title, description },
 };

@@ -285,7 +285,7 @@ export default function LibraryView({ eyebrow, heading, lede, entries, owner, to
     ...(watchedCount > 0 ? [{ key: "stats", label: "Stats", mobileOnly: true, onClick: () => setStatsOpen(true) }] : []),
     ...(owner ? [{ key: "recs", label: "✦ For you", mobileOnly: true, onClick: () => setRecsOpen(true) }] : []),
     ...(owner ? [{ key: "browse", label: "Browse popular", mobileOnly: true, onClick: () => setPicking(true) }] : []),
-    ...(owner ? [{ key: "smart", label: "🧪 Smart picks · experiment", onClick: () => setSmartOpen(true) }] : []),
+    { key: "smart", label: "🧪 Something I tried", mobileOnly: true, onClick: () => setSmartOpen(true) },
     ...(owner ? [{ key: "import", label: "Import a list", onClick: () => setImporting(true) }] : []),
     ...(menuItems ?? []),
   ];
@@ -302,6 +302,7 @@ export default function LibraryView({ eyebrow, heading, lede, entries, owner, to
             {owner && (
               <button className="btn ghost small hide-sm" onClick={() => setRecsOpen(true)}>✦ For you</button>
             )}
+            <button className="btn ghost small hide-sm" onClick={() => setSmartOpen(true)}>🧪 Something I tried</button>
             {owner?.shareUrl && (
               <button
                 className="btn ghost small"
@@ -542,8 +543,8 @@ export default function LibraryView({ eyebrow, heading, lede, entries, owner, to
       </AnimatePresence>
 
       <AnimatePresence>
-        {owner && smartOpen && (
-          <SmartPicksModal key="smart" entries={entries} existing={existing} onClose={() => setSmartOpen(false)} onConfirm={handlePicks} />
+        {smartOpen && (
+          <SmartPicksModal key="smart" entries={entries} existing={existing} onClose={() => setSmartOpen(false)} onConfirm={owner ? handlePicks : undefined} />
         )}
       </AnimatePresence>
 

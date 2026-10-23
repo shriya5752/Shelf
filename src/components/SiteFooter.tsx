@@ -4,6 +4,8 @@ import Link from "next/link";
 export default function SiteFooter() {
   return (
     <footer className="sitefoot">
+      <span>Made by <b>Shriya</b></span>
+      <span className="dot" aria-hidden>·</span>
       <span>This product uses the TMDB API but is not endorsed or certified by TMDB.</span>
       <span className="dot" aria-hidden>·</span>
       <Link href="/privacy">Privacy</Link>
