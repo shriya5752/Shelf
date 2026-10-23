@@ -1,0 +1,27 @@
+{
+  "count": 9715,
+  "dim": 128,
+  "dataset": "MovieLens ml-latest-small (GroupLens)",
+  "users": 610,
+  "ratings": 100836,
+  "latest_movie_year": 2018,
+  "model": {
+    "type": "PureSVD on liked-movie matrix",
+    "k": 128,
+    "gamma": 0.25,
+    "taste_from": "likes",
+    "genre_alpha": 0.0,
+    "vector_dim": 128
+  },
+  "hand_over_n0": 40,
+  "test": {
+    "hit@10": 0.0862,
+    "ci95": 0.0224,
+    "popularity_hit@10": 0.0415,
+    "lift": 2.08,
+    "lift_interval_diff": [
+      0.0232,
+      0.068
+    ]
+  }
+}
