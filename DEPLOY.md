@@ -35,8 +35,10 @@ Deploy.
 ## 4. Tell Supabase the live address
 **Authentication → URL Configuration** → Site URL = your Vercel address, and add it to Redirect URLs.
 
-## 5. Emails from your own name
-Follow `supabase/email-templates/README.md`.
+## 5. Sign-up without email confirmation
+Supabase → **Authentication → Sign In / Providers → Email**: switch **Confirm email** off and save.
+People can then sign up and start straight away. There is no password reset, because nothing is emailed.
+To add confirmation emails later (you will need a domain you own for good deliverability), follow `supabase/email-templates/README.md`.
 
 ## 6. Check
 Open the site signed out (you should see `shsh`'s shelf), sign up with a spare email, confirm, add a title, open `/u/<name>`.

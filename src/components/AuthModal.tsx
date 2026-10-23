@@ -101,6 +101,7 @@ export default function AuthModal({ initialMode = "up", onClose, onSignIn, onSig
           <label className="field">
             <span>Password</span>
             <input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "up" ? "new-password" : "current-password"} />
+            {mode === "up" && <small className="note" style={{ display: "block", marginTop: 6 }}>At least 8 characters. Keep it safe: there’s no password reset yet.</small>}
           </label>
 
           <AnimatePresence>
