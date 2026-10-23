@@ -1,0 +1,82 @@
+{
+  "dataset": "MovieLens ml-latest-small (GroupLens)",
+  "users": 610,
+  "movies": 9724,
+  "ratings": 100836,
+  "model": {
+    "type": "PureSVD on liked-movie matrix",
+    "k": 128,
+    "gamma": 0.25,
+    "taste_from": "likes",
+    "genre_alpha": 0.0,
+    "vector_dim": 128
+  },
+  "test": {
+    "Popularity": {
+      "hit@10": 0.0415,
+      "ci95": 0.0159,
+      "ndcg@10": 0.0227,
+      "median_rank": 502.0
+    },
+    "Genres only": {
+      "hit@10": 0.0017,
+      "ci95": 0.0032,
+      "ndcg@10": 0.0005,
+      "median_rank": 2836.5
+    },
+    "BPR (PyTorch)": {
+      "hit@10": 0.0663,
+      "ci95": 0.0199,
+      "ndcg@10": 0.032,
+      "median_rank": 365.0
+    },
+    "Smart picks (PureSVD)": {
+      "hit@10": 0.0862,
+      "ci95": 0.0224,
+      "ndcg@10": 0.0447,
+      "median_rank": 225.0
+    }
+  },
+  "lift_vs_popularity": 2.08,
+  "lift_interval_diff": [
+    0.0232,
+    0.068
+  ],
+  "discovery_tradeoff": [
+    {
+      "beta (discovery)": 0.0,
+      "hit@10": 0.0862,
+      "\u00b1": 0.0224,
+      "share of picks from the 100 most-rated movies": 0.7015,
+      "distinct movies recommended": 435
+    },
+    {
+      "beta (discovery)": 0.25,
+      "hit@10": 0.0896,
+      "\u00b1": 0.0228,
+      "share of picks from the 100 most-rated movies": 0.6109,
+      "distinct movies recommended": 560
+    },
+    {
+      "beta (discovery)": 0.5,
+      "hit@10": 0.0945,
+      "\u00b1": 0.0234,
+      "share of picks from the 100 most-rated movies": 0.499,
+      "distinct movies recommended": 748
+    },
+    {
+      "beta (discovery)": 0.75,
+      "hit@10": 0.0912,
+      "\u00b1": 0.023,
+      "share of picks from the 100 most-rated movies": 0.3685,
+      "distinct movies recommended": 1115
+    },
+    {
+      "beta (discovery)": 1.0,
+      "hit@10": 0.0448,
+      "\u00b1": 0.0165,
+      "share of picks from the 100 most-rated movies": 0.1446,
+      "distinct movies recommended": 1674
+    }
+  ]
+}
