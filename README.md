@@ -4,6 +4,19 @@
 
 **Live:** https://shelf-shshs12.vercel.app
 
+![The shelf](screenshots/shelf.png)
+
+<table>
+  <tr>
+    <td width="50%"><img src="screenshots/title.png" alt="A title card with poster and notes"></td>
+    <td width="50%"><img src="screenshots/smart-picks.png" alt="Smart picks, a small ML experiment"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Open any title: poster, notes, and more like it</sub></td>
+    <td align="center"><sub>Smart picks: a recommender I trained myself</sub></td>
+  </tr>
+</table>
+
 ## What it does
 
 - **Search every title.** Movies and series, with sharp posters, from TMDB. Can't find one? Add it by hand.
